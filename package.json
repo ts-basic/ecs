@@ -1,0 +1,24 @@
+{
+    "name": "ts-basic-ecs-workspace",
+    "version": "0.1.0",
+    "private": true,
+    "scripts": {
+        "pack": "npm run build -w packages/ecs && npm pack -w packages/ecs",
+        "build:ecs": "npm run build -w packages/ecs",
+        "build:demo-shapes": "npm run build:prod -w packages/demo-shapes",
+        "build:demo-shapes:dev": "npm run build:dev -w packages/demo-shapes",
+        "lint": "eslint \"**/*.ts\" && prettier --check \"**/*.{ts,json,md}\"",
+        "lint:fix": "eslint --fix \"**/*.ts\" && prettier --write \"**/*.{ts,json,md}\""
+    },
+    "workspaces": [
+        "packages/demo-shapes",
+        "packages/ecs"
+    ],
+    "devDependencies": {
+        "@typescript-eslint/eslint-plugin": "^5.57.0",
+        "@typescript-eslint/parser": "^5.57.0",
+        "eslint": "^8.36.0",
+        "eslint-config-prettier": "^8.8.0",
+        "prettier": "^2.8.7"
+    }
+}

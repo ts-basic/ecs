@@ -1,0 +1,59 @@
+{
+    "name": "@ts-basic/ecs",
+    "version": "0.1.0",
+    "description": "A performant, no-frills Entity Component System for TypeScript",
+    "keywords": [
+        "ecs",
+        "entity",
+        "component",
+        "system",
+        "typescript",
+        "basic",
+        "simple",
+        "lightweight",
+        "performant",
+        "fast"
+    ],
+    "homepage": "https://github.com/ts-basic/ecs#readme",
+    "bugs": {
+        "url": "https://github.com/ts-basic/ecs/issues",
+        "email": "contact@bengearig.com"
+    },
+    "license": "MIT",
+    "author": {
+        "name": "Benjamin Gearig",
+        "email": "contact@bengearig.com",
+        "url": "https://bengearig.com"
+    },
+    "funding": {},
+    "files": [
+        "dist",
+        "package.json",
+        "src"
+    ],
+    "main": "./dist/index.cjs.js",
+    "module": "./dist/index.esm.js",
+    "types": "./dist/index.d.ts",
+    "exports": {
+        ".": {
+            "import": "./dist/index.esm.js",
+            "require": "./dist/index.cjs.js"
+        }
+    },
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/ts-basic/ecs.git"
+    },
+    "scripts": {
+        "clean": "rimraf dist",
+        "build": "npm run clean && npm run build:cjs && npm run build:esm && npm run build:types",
+        "build:types": "tsc --emitDeclarationOnly",
+        "build:cjs": "esbuild src/index.ts --bundle --sourcemap --target=es2017 --format=cjs --platform=node --outfile=dist/index.cjs.js",
+        "build:esm": "esbuild src/index.ts --bundle --sourcemap --target=es2017 --format=esm --platform=neutral --outfile=dist/index.esm.js"
+    },
+    "devDependencies": {
+        "esbuild": "^0.17.13",
+        "rimraf": "^4.4.0",
+        "typescript": "^5.0.2"
+    }
+}
