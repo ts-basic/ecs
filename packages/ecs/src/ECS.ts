@@ -149,6 +149,14 @@ export class ECS<T extends AbstractConstructor = AbstractConstructor> {
         }
     }
 
+    public getComponent<U extends T>(entity: number, component: U): InstanceType<U> {
+        this.entityExistsOrError(entity);
+        if (!this.entityComponents.get(entity)!.has(component)) {
+            throw new Error("entity does not have component");
+        }
+        return this.entityComponents.get(entity)!.get(component)!;
+    }
+
     public getComponents(entity: number): Map<T, InstanceType<T>> {
         return this.entityComponents.get(entity)!;
     }
