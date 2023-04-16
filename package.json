@@ -3,7 +3,7 @@
     "version": "0.1.0",
     "private": true,
     "scripts": {
-        "pack": "npm run build -w packages/ecs && npm pack -w packages/ecs",
+        "publish": "npm publish --access public -w packages/ecs",
         "build:ecs": "npm run build -w packages/ecs",
         "build:demo-shapes": "npm run build:prod -w packages/demo-shapes",
         "build:demo-shapes:dev": "npm run build:dev -w packages/demo-shapes",
