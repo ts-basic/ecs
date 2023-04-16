@@ -3,13 +3,23 @@ import { BaseSystem } from "./BaseSystem";
 import { EntityPool } from "./EntityPool";
 import { ComponentRegistry } from "./ComponentRegistry";
 
+class ComponentMap<T extends AbstractConstructor> extends Map<T, InstanceType<T>> {
+    get<U extends T>(key: U): InstanceType<U> {
+        const value = super.get(key);
+        if (value === undefined) {
+            throw new Error(`Component ${key.name} does not exist on entity`);
+        }
+        return value;
+    }
+}
+
 export class ECS<T extends AbstractConstructor = AbstractConstructor> {
     private entityPool: Pool<number> = new EntityPool();
     private componentRegistry: Registry<number, T> = new ComponentRegistry<T>();
     private entityIds = new Set<number>();
     private entitySignatures = new Map<number, number>();
     private entityRefs = new Map<number, WeakRef<EntityRef>>();
-    private entityComponents = new Map<number, Map<T, InstanceType<T>>>();
+    private entityComponents = new Map<number, ComponentMap<T>>();
     private archetype = new Map<number, Array<number>>();
     private systems = new Map<typeof BaseSystem, BaseSystem<T>>();
 
@@ -33,11 +43,12 @@ export class ECS<T extends AbstractConstructor = AbstractConstructor> {
         return ref;
     }
 
+    // Todo: don't fully add entity until next tick
     public createEntity(): number {
         const entity = this.entityPool.allocate();
         this.entityIds.add(entity);
         this.entitySignatures.set(entity, 0);
-        this.entityComponents.set(entity, new Map<T, InstanceType<T>>());
+        this.entityComponents.set(entity, new ComponentMap<T>());
         return entity;
     }
 
@@ -157,7 +168,7 @@ export class ECS<T extends AbstractConstructor = AbstractConstructor> {
         return this.entityComponents.get(entity)!.get(component)!;
     }
 
-    public getComponents(entity: number): Map<T, InstanceType<T>> {
+    public getComponents(entity: number): ComponentMap<T> {
         return this.entityComponents.get(entity)!;
     }
 }

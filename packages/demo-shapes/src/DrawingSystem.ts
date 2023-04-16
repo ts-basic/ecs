@@ -40,9 +40,9 @@ export class DrawingSystem extends BaseSystem {
         const entities = this.ecs.find(this.signature);
         for (const entity of entities) {
             const components = this.ecs.getComponents(entity);
-            const shapeComponent = components.get(ShapeComponent) as ShapeComponent;
-            const positionComponent = components.get(PositionComponent) as PositionComponent;
-            const colorComponent = components.get(ColorComponent) as ColorComponent;
+            const shapeComponent = components.get(ShapeComponent);
+            const positionComponent = components.get(PositionComponent);
+            const colorComponent = components.get(ColorComponent);
             this.canvasContext.fillStyle = colorComponent.colorString;
             if (shapeComponent.shape.type === "circle") {
                 this.canvasContext.beginPath();
