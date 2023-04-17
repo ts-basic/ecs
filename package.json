@@ -9,12 +9,15 @@
         "build:demo-physics:dev": "npm run build:dev -w packages/demo-physics",
         "build:demo-shapes": "npm run build:prod -w packages/demo-shapes",
         "build:demo-shapes:dev": "npm run build:dev -w packages/demo-shapes",
+        "build:demo-sprites": "npm run build:prod -w packages/demo-sprites",
+        "build:demo-sprites:dev": "npm run build:dev -w packages/demo-sprites",
         "lint": "eslint \"**/*.ts\" && prettier --check \"**/*.{ts,json,md}\"",
         "lint:fix": "eslint --fix \"**/*.ts\" && prettier --write \"**/*.{ts,json,md}\""
     },
     "workspaces": [
         "packages/demo-physics",
         "packages/demo-shapes",
+        "packages/demo-sprites",
         "packages/ecs"
     ],
     "devDependencies": {

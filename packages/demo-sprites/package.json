@@ -1,0 +1,21 @@
+{
+    "name": "demo-sprites",
+    "version": "0.1.0",
+    "private": true,
+    "scripts": {
+        "build:old": "tsc --emitDeclarationOnly --outFile dist/index.d.ts",
+        "clean": "rimraf dist",
+        "build:prod": "npm run clean && esbuild src/index.ts --bundle --minify --target=es2017 --format=iife --platform=browser --outfile=dist/index.js",
+        "build:dev": "npm run clean && esbuild src/index.ts --bundle --sourcemap --target=es2017 --format=iife --platform=browser --outfile=dist/index.js"
+    },
+    "dependencies": {
+        "@ts-basic/ecs": "npm:ecs@*",
+        "pixi.js": "^7.2.4",
+        "planck": "^1.0.0-alpha.4"
+    },
+    "devDependencies": {
+        "esbuild": "^0.17.13",
+        "rimraf": "^4.4.0",
+        "typescript": "^5.0.2"
+    }
+}
