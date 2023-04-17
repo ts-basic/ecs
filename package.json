@@ -5,12 +5,15 @@
     "scripts": {
         "publish": "npm publish --access public -w packages/ecs",
         "build:ecs": "npm run build -w packages/ecs",
+        "build:demo-physics": "npm run build:prod -w packages/demo-physics",
+        "build:demo-physics:dev": "npm run build:dev -w packages/demo-physics",
         "build:demo-shapes": "npm run build:prod -w packages/demo-shapes",
         "build:demo-shapes:dev": "npm run build:dev -w packages/demo-shapes",
         "lint": "eslint \"**/*.ts\" && prettier --check \"**/*.{ts,json,md}\"",
         "lint:fix": "eslint --fix \"**/*.ts\" && prettier --write \"**/*.{ts,json,md}\""
     },
     "workspaces": [
+        "packages/demo-physics",
         "packages/demo-shapes",
         "packages/ecs"
     ],
