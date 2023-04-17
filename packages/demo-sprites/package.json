@@ -9,6 +9,7 @@
         "build:dev": "npm run clean && esbuild src/index.ts --bundle --sourcemap --target=es2017 --format=iife --platform=browser --outfile=dist/index.js"
     },
     "dependencies": {
+        "@pixi/loaders": "^6.5.9",
         "@ts-basic/ecs": "npm:ecs@*",
         "pixi.js": "^7.2.4",
         "planck": "^1.0.0-alpha.4"

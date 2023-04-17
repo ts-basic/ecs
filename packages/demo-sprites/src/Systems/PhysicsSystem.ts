@@ -11,7 +11,9 @@ export class PhysicsSystem extends BaseSystem {
 
     public onEarlyUpdate(deltaTime: number) {}
 
-    public onUpdate(deltaTime: number) {}
+    public onUpdate(deltaTime: number) {
+        this.world.step(deltaTime, 8, 3);
+    }
 
     public onLateUpdate(deltaTime: number) {}
 }

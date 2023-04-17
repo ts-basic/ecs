@@ -8,6 +8,10 @@ import { PhysicsSystem } from "./Systems/PhysicsSystem";
 import { TransformComponent } from "./Components/TransformComponent";
 import { SpriteComponent } from "./SpriteComponent";
 import CharactersSheet from "./Spritesheets/characters.json";
+import { AppLoaderPlugin } from "@pixi/loaders";
+
+// PLUGINS
+PIXI.extensions.add(AppLoaderPlugin);
 
 // GAME CONSTANTS
 const PIXELS_PER_METER = 16;
@@ -42,6 +46,7 @@ window.addEventListener("resize", () => renderingSystem.resizeRenderer());
 ecs.addSystem(renderingSystem);
 
 
+const loader = PIXI
 const texture = PIXI.BaseTexture.from(CharactersSheet.src);
 const spritesheet = new PIXI.Spritesheet(texture, CharactersSheet.atlas);
 (async () => await spritesheet.parse())();
@@ -134,8 +139,6 @@ function gameLoop(now: DOMHighResTimeStamp) {
     prevTime = time;
     if (deltaTime < 0) deltaTime = 0;
     if (deltaTime > 1) deltaTime = 1;
-
-    // planckWorld.step(deltaTime, 8, 3);
 
     ecs.tick(deltaTime);
 
