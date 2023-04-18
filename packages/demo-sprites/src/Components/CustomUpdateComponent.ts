@@ -1,6 +1,6 @@
 import { IPerformsUpdates } from "@ts-basic/ecs";
 
-export class UpdateComponent implements IPerformsUpdates {
+export class CustomUpdateComponent implements IPerformsUpdates {
     constructor(private readonly updater: IPerformsUpdates) {}
 
     public onEarlyUpdate(deltaTime: number): void {

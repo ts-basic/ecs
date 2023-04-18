@@ -1,7 +1,7 @@
 import * as PIXI from "pixi.js";
 import { BaseSystem, ECS } from "@ts-basic/ecs";
-import { SpriteComponent } from "./SpriteComponent";
-import { TransformComponent } from "./Components/TransformComponent";
+import { SpriteComponent } from "../SpriteComponent";
+import { TransformComponent } from "../Components/TransformComponent";
 
 export class SpriteSystem extends BaseSystem {
     private signature = this.ecs.signatureFromComponents(SpriteComponent, TransformComponent);

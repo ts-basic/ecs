@@ -1,8 +1,8 @@
 import { BaseSystem, ECS } from "@ts-basic/ecs";
-import { UpdateComponent } from "../Components/UpdateComponent";
+import { CustomUpdateComponent } from "../Components/CustomUpdateComponent";
 
-export class ScriptSystem extends BaseSystem {
-    private signature = this.ecs.signatureFromComponents(UpdateComponent);
+export class CustomUpdateSystem extends BaseSystem {
+    private signature = this.ecs.signatureFromComponents(CustomUpdateComponent);
 
     constructor(ecs: ECS) {
         super(ecs);
@@ -12,7 +12,7 @@ export class ScriptSystem extends BaseSystem {
     public onEarlyUpdate(deltaTime: number): void {
         const entities = this.ecs.find(this.signature);
         for (const entity of entities) {
-            const updateComponent = this.ecs.getComponent(entity, UpdateComponent);
+            const updateComponent = this.ecs.getComponent(entity, CustomUpdateComponent);
             updateComponent.onEarlyUpdate(deltaTime);
         }
     }
@@ -20,7 +20,7 @@ export class ScriptSystem extends BaseSystem {
     public onUpdate(deltaTime: number): void {
         const entities = this.ecs.find(this.signature);
         for (const entity of entities) {
-            const updateComponent = this.ecs.getComponent(entity, UpdateComponent);
+            const updateComponent = this.ecs.getComponent(entity, CustomUpdateComponent);
             updateComponent.onUpdate(deltaTime);
         }
     }
@@ -28,7 +28,7 @@ export class ScriptSystem extends BaseSystem {
     public onLateUpdate(deltaTime: number): void {
         const entities = this.ecs.find(this.signature);
         for (const entity of entities) {
-            const updateComponent = this.ecs.getComponent(entity, UpdateComponent);
+            const updateComponent = this.ecs.getComponent(entity, CustomUpdateComponent);
             updateComponent.onLateUpdate(deltaTime);
         }
     }

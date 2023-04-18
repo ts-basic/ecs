@@ -2,64 +2,54 @@ import { ECS } from "@ts-basic/ecs";
 import * as PIXI from "pixi.js";
 import { RenderingSystem } from "./RenderingSystem";
 import { UISystem } from "./UISystem";
-import { SpriteSystem } from "./SpriteSystem";
-import { Vec2, World } from "planck";
+import { SpriteSystem } from "./Systems/SpriteSystem";
+import { Box, Vec2, World } from "planck";
 import { PhysicsSystem } from "./Systems/PhysicsSystem";
 import { TransformComponent } from "./Components/TransformComponent";
 import { SpriteComponent } from "./SpriteComponent";
-import CharactersSheet from "./Spritesheets/characters.json";
-import { AppLoaderPlugin } from "@pixi/loaders";
+import resources from "./resources.json";
+import { StrictMap } from "./common";
+import { RigidBodyComponent } from "./Components/RigidBodyComponent";
+import { Game } from "./Game";
 
-// PLUGINS
-PIXI.extensions.add(AppLoaderPlugin);
-
-// GAME CONSTANTS
-const PIXELS_PER_METER = 16;
-
-// RENDERER SETUP
-const renderer = new PIXI.Renderer({ backgroundColor: "black", antialias: false });
-PIXI.BaseTexture.defaultOptions.scaleMode = PIXI.SCALE_MODES.NEAREST;
-const mainStage = new PIXI.Container();
-const spriteStage = new PIXI.Container();
-const uiStage = new PIXI.Container();
-mainStage.addChild(spriteStage);
-mainStage.addChild(uiStage);
+const game = new Game();
 
 // ECS SETUP
-const ecs = new ECS();
-ecs.registerComponent(SpriteComponent);
-ecs.registerComponent(TransformComponent);
+let prevTime = 0;
+const spritesheets: StrictMap<string, PIXI.Spritesheet> = new StrictMap();
 
-const physicsWorld = new World(Vec2(0, 9.8));
-physicsWorld.setContinuousPhysics(true);
-const physicsSystem = new PhysicsSystem(ecs, physicsWorld);
-ecs.addSystem(physicsSystem);
+async function init() {
+    const urls = Object.fromEntries(resources.map((s) => [s.name, s.src]));
+    PIXI.Assets.resolver.basePath = "img/";
+    PIXI.Assets.add(Object.keys(urls), Object.values(urls));
+    const textures = await PIXI.Assets.load(Object.keys(urls));
 
-const spriteSystem = new SpriteSystem(ecs, PIXELS_PER_METER, spriteStage);
-ecs.addSystem(spriteSystem);
+    for (const resource of resources) {
+        spritesheets.set(resource.name, new PIXI.Spritesheet(textures[resource.name], resource.atlas));
+        await spritesheets.get(resource.name).parse();
+    }
 
-const uiSystem = new UISystem(ecs, uiStage);
-ecs.addSystem(uiSystem);
+    const sprite = new PIXI.AnimatedSprite(spritesheets.get("characters").animations.personDown);
+    sprite.animationSpeed = 0.1;
+    sprite.play();
+    sprite.x = 20;
+    sprite.y = 20;
+    const boxBody = physicsWorld.createDynamicBody({ position: new Vec2(7.5, 7.5) });
+    const boxFixture = boxBody.createFixture(Box(1, 1), 0);
+    boxBody.setMassData({ mass: 1, center: Vec2(), I: 1 });
+    const entity = ecs.createEntity();
+    ecs.assignComponent(entity, new SpriteComponent(sprite, Vec2(0.5, 0.5)));
+    ecs.assignComponent(entity, new TransformComponent(Vec2(1, 1), Vec2(1, 1), 0));
+    ecs.assignComponent(entity, new RigidBodyComponent(boxBody));
 
-const renderingSystem = new RenderingSystem(ecs, renderer, mainStage);
-window.addEventListener("resize", () => renderingSystem.resizeRenderer());
-ecs.addSystem(renderingSystem);
+    // delta time warm-up cycle
+    requestAnimationFrame((now: DOMHighResTimeStamp) => {
+        prevTime = now / 1000;
+        requestAnimationFrame(gameLoop);
+    });
+}
 
-
-const loader = PIXI
-const texture = PIXI.BaseTexture.from(CharactersSheet.src);
-const spritesheet = new PIXI.Spritesheet(texture, CharactersSheet.atlas);
-(async () => await spritesheet.parse())();
-const sprite = new PIXI.AnimatedSprite(spritesheet.animations.personDown);
-sprite.textures = spritesheet.animations.personUp;
-sprite.animationSpeed = 0.1;
-sprite.play();
-sprite.x = 20;
-sprite.y = 20;
-const entity = ecs.createEntity();
-ecs.assignComponent(entity, new SpriteComponent(sprite, Vec2(0.5, 0.5)));
-ecs.assignComponent(entity, new TransformComponent(Vec2(1, 1), Vec2(1, 1), 0));
-
+init();
 
 // const drawingSystem = new RenderingSystem(ecs, canvasContext, PIXELS_PER_METER);
 // ecs.addSystem(drawingSystem);
@@ -122,8 +112,6 @@ ecs.assignComponent(entity, new TransformComponent(Vec2(1, 1), Vec2(1, 1), 0));
     }
 }*/
 
-document.body.appendChild(renderingSystem.canvas);
-
 /*
  * GAME LOOP
  *
@@ -131,8 +119,6 @@ document.body.appendChild(renderingSystem.canvas);
  * requirements. See the following webpage for more information:
  * https://developer.mozilla.org/en-US/docs/Web/API/DOMHighResTimeStamp#security_requirements
  */
-let prevTime = 0;
-
 function gameLoop(now: DOMHighResTimeStamp) {
     const time = now / 1000;
     let deltaTime = time - prevTime;
@@ -140,13 +126,7 @@ function gameLoop(now: DOMHighResTimeStamp) {
     if (deltaTime < 0) deltaTime = 0;
     if (deltaTime > 1) deltaTime = 1;
 
-    ecs.tick(deltaTime);
+    game.ecs.tick(deltaTime);
 
     requestAnimationFrame(gameLoop);
 }
-
-// delta time warm-up cycle
-requestAnimationFrame((now: DOMHighResTimeStamp) => {
-    prevTime = now / 1000;
-    requestAnimationFrame(gameLoop);
-});
