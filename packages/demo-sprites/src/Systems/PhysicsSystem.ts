@@ -1,8 +1,6 @@
 import { BaseSystem, ECS } from "@ts-basic/ecs";
 import { World } from "planck";
-import { TransformComponent } from "../Components/TransformComponent";
-import { RigidBodyComponent } from "../Components/RigidBodyComponent";
-import { Game } from "../Game";
+import { RigidBodyComponent, TransformComponent } from "../Components";
 
 export class PhysicsSystem extends BaseSystem {
     private signature = this.ecs.signatureFromComponents(RigidBodyComponent, TransformComponent);

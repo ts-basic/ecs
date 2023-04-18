@@ -1,30 +1,19 @@
-import { ECS } from "@ts-basic/ecs";
 import * as PIXI from "pixi.js";
-import { RenderingSystem } from "./RenderingSystem";
-import { UISystem } from "./UISystem";
-import { SpriteSystem } from "./Systems/SpriteSystem";
-import { Box, Vec2, World } from "planck";
-import { PhysicsSystem } from "./Systems/PhysicsSystem";
-import { TransformComponent } from "./Components/TransformComponent";
-import { SpriteComponent } from "./SpriteComponent";
+import { Box, Vec2 } from "planck";
+import { RigidBodyComponent, SpriteComponent, TransformComponent } from "./Components";
 import resources from "./resources.json";
 import { StrictMap } from "./common";
-import { RigidBodyComponent } from "./Components/RigidBodyComponent";
 import { Game } from "./Game";
 
 const game = new Game();
+(async () => game.init())();
 
 // ECS SETUP
 let prevTime = 0;
 const spritesheets: StrictMap<string, PIXI.Spritesheet> = new StrictMap();
 
 async function init() {
-    const urls = Object.fromEntries(resources.map((s) => [s.name, s.src]));
-    PIXI.Assets.resolver.basePath = "img/";
-    PIXI.Assets.add(Object.keys(urls), Object.values(urls));
-    const textures = await PIXI.Assets.load(Object.keys(urls));
-
-    for (const resource of resources) {
+    for (const resourceGroup in resources) {
         spritesheets.set(resource.name, new PIXI.Spritesheet(textures[resource.name], resource.atlas));
         await spritesheets.get(resource.name).parse();
     }

@@ -1,5 +1,5 @@
 import { BaseSystem, ECS } from "@ts-basic/ecs";
-import { CustomUpdateComponent } from "../Components/CustomUpdateComponent";
+import { CustomUpdateComponent } from "../Components";
 
 export class CustomUpdateSystem extends BaseSystem {
     private signature = this.ecs.signatureFromComponents(CustomUpdateComponent);

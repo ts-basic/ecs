@@ -1,14 +1,11 @@
 import * as PIXI from "pixi.js";
 import { ReadonlyStrictMap, StrictMap } from "./common";
 import { ECS } from "@ts-basic/ecs";
-import { SpriteComponent } from "./SpriteComponent";
-import { TransformComponent } from "./Components/TransformComponent";
-import { RigidBodyComponent } from "./Components/RigidBodyComponent";
+import { RigidBodyComponent, SpriteComponent, TransformComponent } from "./Components";
 import { Vec2, World } from "planck";
-import { PhysicsSystem } from "./Systems/PhysicsSystem";
-import { SpriteSystem } from "./Systems/SpriteSystem";
+import { PhysicsSystem, RenderingSystem, SpriteSystem } from "./Systems";
 import { UISystem } from "./UISystem";
-import { RenderingSystem } from "./RenderingSystem";
+import resources from "./resources.json";
 
 type Stages = "main" | "sprite" | "ui";
 
@@ -16,7 +13,7 @@ export class Game {
     public readonly ppm = 16; // pixels per meter
     public readonly renderer: PIXI.Renderer = new PIXI.Renderer({
         backgroundColor: "black",
-        antialias: false,
+        antialias: false
     });
     public readonly stages: ReadonlyStrictMap<Stages, PIXI.Container> = new StrictMap<
         Stages,
@@ -24,16 +21,21 @@ export class Game {
     >([
         ["main", new PIXI.Container()],
         ["sprite", new PIXI.Container()],
-        ["ui", new PIXI.Container()],
+        ["ui", new PIXI.Container()]
     ]);
     public readonly physics = new World(Vec2(0, 0));
     public readonly ecs = new ECS();
+    public _animations = new Map<string, PIXI.utils.Dict<PIXI.Texture>>();
 
-    constructor() {
+    public get animations(): ReadonlyMap<string, PIXI.utils.Dict<PIXI.Texture>> {
+        return this._animations;
+    }
+
+    async init() {
         this.initRendering();
         this.initPhysics();
         this.initECS();
-
+        await this.initAnimations();
     }
 
     private initRendering() {
@@ -62,5 +64,13 @@ export class Game {
         );
         window.addEventListener("resize", () => renderingSystem.resizeRenderer());
         this.ecs.addSystem(renderingSystem);
+    }
+
+    private async initAnimations() {
+        const urls = Object.fromEntries(Object.entries(resources).map(([key, value]) => [key, value.src]));
+        PIXI.Assets.resolver.basePath = "img/";
+        PIXI.Assets.add(Object.keys(urls), Object.values(urls));
+        const textures = await PIXI.Assets.load(Object.keys(urls));
+
     }
 }
