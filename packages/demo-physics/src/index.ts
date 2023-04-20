@@ -50,9 +50,15 @@ function createPlatform(position: planck.Vec2, length: number) {
 
 const platforms = [
     [25, 10],
-    [22.5, 15], [27.5, 15],
-    [20, 20], [25, 20], [30, 20],
-    [17.5, 25], [22.5, 25], [27.5, 25], [32.5, 25]
+    [22.5, 15],
+    [27.5, 15],
+    [20, 20],
+    [25, 20],
+    [30, 20],
+    [17.5, 25],
+    [22.5, 25],
+    [27.5, 25],
+    [32.5, 25],
 ];
 
 for (let i = 0; i < platforms.length; i++) {
@@ -68,6 +74,7 @@ function createSquare(position: planck.Vec2, mass: number, size: number) {
     ecs.assignComponent(boxEntity, new TransformComponent(boxBody));
     ecs.assignComponent(boxEntity, new ShapeComponent(boxFixture.getShape()));
 }
+
 function createCircle(position: planck.Vec2, mass: number, radius: number) {
     const circleEntity = ecs.createEntity();
     const circleBody = planckWorld.createDynamicBody({ position });
@@ -76,6 +83,7 @@ function createCircle(position: planck.Vec2, mass: number, radius: number) {
     ecs.assignComponent(circleEntity, new TransformComponent(circleBody));
     ecs.assignComponent(circleEntity, new ShapeComponent(circleFixture.getShape()));
 }
+
 function shapeFactory() {
     if (Math.random() * 2 > 1) {
         createSquare(planck.Vec2(20 + Math.random() * 10, 0), 5, 0.5);

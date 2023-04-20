@@ -4,10 +4,9 @@
 [![tree-shaking-badge]]()
 [![license-badge]][license-url]
 
-@ts-basic/ecs
-=============
+# @ts-basic/ecs
 
-*@ts-basic/ecs* is a performant, no-frills Entity Component System for
+_@ts-basic/ecs_ is a performant, no-frills Entity Component System for
 TypeScript.
 
 [npm-badge]: https://badgen.net/npm/v/@ts-basic/ecs
