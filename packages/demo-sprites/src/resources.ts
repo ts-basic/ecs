@@ -4,7 +4,7 @@ type Resources = {
     [key: string]: {
         src: string;
         atlas: PIXI.ISpritesheetData;
-    }
+    };
 };
 
 export const resources: Resources = {

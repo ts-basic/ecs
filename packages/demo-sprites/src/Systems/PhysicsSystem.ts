@@ -9,7 +9,7 @@ export class PhysicsSystem extends BaseSystem {
         super(ecs);
     }
 
-    public onEarlyUpdate(deltaTime: number) {}
+    public onEarlyUpdate() {}
 
     public onUpdate(deltaTime: number) {
         const entities = this.ecs.find(this.signature);
@@ -26,5 +26,5 @@ export class PhysicsSystem extends BaseSystem {
         this.world.step(deltaTime, 8, 3);
     }
 
-    public onLateUpdate(deltaTime: number) {}
+    public onLateUpdate() {}
 }
