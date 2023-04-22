@@ -41,17 +41,60 @@ function createWall(position: Vec2, width: number, height: number): number {
     const game = Game.instance();
     await game.init();
 
-    const player = createDynamicBody(Vec2(5, 5), 1, 1);
+    // prettier-ignore
+    const tiles = [
+        [
+            ["crownNW", "crownN", "crownN", "crownN", "crownN", "crownN", "crownN", "crownN", "crownN", "crownNE"],
+            ["crownW", "wallTop", "wallTop", "wallTop", "wallTop", "wallTop", "wallTop", "wallTop", "wallTop", "crownE"],
+            ["crownW", "wallBtm", "wallBtm", "wallBtm", "wallBtm", "wallBtm", "wallBtm", "wallBtm", "wallBtm", "crownE"],
+            ["crownW", "floor1", "floor1", "floor1", "floor1", "floor1", "floor2", "floor1", "floor1", "crownE"],
+            ["crownW", "floor1", "floor2", "floor1", "floor1", "floor1", "floor1", "floor1", "floor2", "crownE"],
+            ["crownW", "floor1", "floor1", "floor1", "floor1", "floor1", "floor1", "floor1", "floor1", "crownE"],
+            ["crownW", "floor1", "floor1", "floor1", "floor2", "floor1", "floor1", "floor1", "floor1", "crownE"],
+            ["crownW", "floor1", "floor1", "floor1", "floor1", "floor1", "floor1", "floor1", "floor1", "crownE"],
+            ["crownSW", "crownS", "crownS", "crownS", "crownS", "crownS", "crownS", "crownS", "crownS", "crownSE"]
+        ], [
+            [],
+            [null, null, null, null, "windowTL", "windowTR"],
+            [null, "bedTop", null, null, "windowBL", "windowBR", null, null, "plantT", null],
+            [null, "bedBtm", null, null, null, null, null, "chair", "plantB", null],
+        ], [
+            [],
+            [null, null, null, null, "curtainTL", "curtainTR"],
+            [null, null, null, null, "curtainBL", "curtainBR"],
+        ]
+    ];
+
+    for (const group of tiles) {
+        for (let y = 0; y < group.length; y++) {
+            for (let x = 0; x < group[y].length; x++) {
+                const tile = group[y][x];
+                if (tile === null) continue;
+                const texture = game.tiles.get("interior").get(tile);
+                const entity = game.ecs.createEntity();
+                game.ecs.assignComponent(entity, SpriteComponent.createSprite(texture, Vec2()));
+                game.ecs.assignComponent(
+                    entity,
+                    new TransformComponent(Vec2(x + 3, y + 2), Vec2(1, 1), 0)
+                );
+            }
+        }
+    }
+
+    const player = createDynamicBody(Vec2(7.5, 7.5), 1, 0.5);
     const textures = game.animations.get("characters").get("personDown");
-    const spriteComponent = SpriteComponent.createAnimatedSprite(textures, 0.1, Vec2(0.5, 0.7));
+    const spriteComponent = SpriteComponent.createAnimatedSprite(textures, 0.1, Vec2(0.5, 0.8));
     spriteComponent.sprite.autoUpdate = false;
     game.ecs.assignComponent(player, spriteComponent);
     game.ecs.assignComponent(player, new CustomUpdateComponent(new Player()));
 
-    createWall(Vec2(7.5, 15.5), 15, 1);
-    createWall(Vec2(7.5, -0.5), 15, 1);
-    createWall(Vec2(-0.5, 7.5), 1, 15);
-    createWall(Vec2(15.5, 7.5), 1, 15);
+    createWall(Vec2(7.5, 4.5), 7, 1);
+    createWall(Vec2(3.5, 7.5), 1, 5);
+    createWall(Vec2(11.5, 7.5), 1, 5);
+    createWall(Vec2(7.5, 10.5), 7, 1);
+
+    createWall(Vec2(4.5, 5.5), 1, 1);
+    createWall(Vec2(11, 5.5), 2, 1);
 
     const fpsEntity = game.ecs.createEntity();
     game.ecs.assignComponent(fpsEntity, new CustomUpdateComponent(new FPSScript()));

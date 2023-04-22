@@ -37,6 +37,7 @@ export class Game {
     ]);
     public readonly physics = new World();
     public readonly ecs = new ECS();
+    public tiles = new StrictMap<string, StrictMap<string, PIXI.Texture>>();
     public animations = new StrictMap<string, StrictMap<string, PIXI.Texture[]>>();
     private prevTime = 0;
 
@@ -118,15 +119,21 @@ export class Game {
             Object.entries(resources).map(([key, value]) => [key, value.src])
         );
         PIXI.Assets.resolver.basePath = "img/";
-        PIXI.Assets.add(Object.keys(urls), Object.values(urls));
+        for (const urlsKey in urls) {
+            PIXI.Assets.add(urlsKey, urls[urlsKey]);
+        }
         const textures = await PIXI.Assets.load(Object.keys(urls));
         for (const group in textures) {
             const spritesheet = new PIXI.Spritesheet(textures[group], resources[group].atlas);
             await spritesheet.parse();
-            const map = new StrictMap<string, PIXI.Texture[]>(
-                Object.entries(spritesheet.animations)
+            this.tiles.set(
+                group,
+                new StrictMap<string, PIXI.Texture>(Object.entries(spritesheet.textures))
             );
-            this.animations.set(group, map);
+            this.animations.set(
+                group,
+                new StrictMap<string, PIXI.Texture[]>(Object.entries(spritesheet.animations))
+            );
         }
     }
 }
