@@ -88,10 +88,10 @@ function createWall(position: Vec2, width: number, height: number): number {
     game.ecs.assignComponent(player, spriteComponent);
     game.ecs.assignComponent(player, new CustomUpdateComponent(new Player()));
 
-    createWall(Vec2(7.5, 4.5), 7, 1);
+    createWall(Vec2(8, 4.5), 8, 1);
     createWall(Vec2(3.5, 7.5), 1, 5);
-    createWall(Vec2(11.5, 7.5), 1, 5);
-    createWall(Vec2(7.5, 10.5), 7, 1);
+    createWall(Vec2(12.5, 7.5), 1, 5);
+    createWall(Vec2(8, 10.5), 8, 1);
 
     createWall(Vec2(4.5, 5.5), 1, 1);
     createWall(Vec2(11, 5.5), 2, 1);
