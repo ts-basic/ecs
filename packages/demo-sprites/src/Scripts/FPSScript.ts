@@ -15,12 +15,12 @@ export class FPSScript implements ICustomUpdate {
         this.frameTimes.push(1 / deltaTime);
     }
 
-    onLateUpdate(entity: number): void {
+    onUpdate(entity: number): void {
         const text = Game.instance().ecs.getComponent(entity, UITextComponent);
         text.setText(`${this.fps} FPS`);
     }
 
-    onUpdate(): void {}
+    onLateUpdate(): void {}
 
     private get fps(): number {
         return Math.round(this.frameTimes.reduce((a, b) => a + b, 0) / this.frameTimesLen);

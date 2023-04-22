@@ -8,6 +8,7 @@ import {
 } from "./Components";
 import { Vec2 } from "planck";
 import { FPSScript } from "./Scripts/FPSScript";
+import { Player } from "./Scripts/Player";
 
 function createDynamicBody(position: Vec2, width: number, height: number): number {
     const game = Game.instance();
@@ -43,7 +44,9 @@ function createWall(position: Vec2, width: number, height: number): number {
     const player = createDynamicBody(Vec2(5, 5), 1, 1);
     const textures = game.animations.get("characters").get("personDown");
     const spriteComponent = SpriteComponent.createAnimatedSprite(textures, 0.1, Vec2(0.5, 0.7));
+    spriteComponent.sprite.autoUpdate = false;
     game.ecs.assignComponent(player, spriteComponent);
+    game.ecs.assignComponent(player, new CustomUpdateComponent(new Player()));
 
     createWall(Vec2(7.5, 15.5), 15, 1);
     createWall(Vec2(7.5, -0.5), 15, 1);
